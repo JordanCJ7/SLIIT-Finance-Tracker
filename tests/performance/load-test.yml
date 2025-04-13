@@ -1,0 +1,24 @@
+config:
+  target: 'http://localhost:5000'  # Change this to your target URL
+  phases:
+    - duration: 30
+      arrivalRate: 10  # Ramp up to 10 requests per second
+    - duration: 30
+      arrivalRate: 50  # Increase to 50 requests per second
+    - duration: 30
+      arrivalRate: 100  # Ramp up to 100 requests per second
+
+scenarios:
+  - flow:
+      - get:
+          url: '/api/reports'
+      - get:
+          url: '/api/transactions'
+      - get:
+          url: '/api/goals'
+
+thresholds:
+  http_req_duration:
+    - fast: '< 500ms'   # Requests should be completed in less than 500ms
+  http_reqs_failed:
+    - rate: '< 0.05'    # Error rate should be less than 5%
